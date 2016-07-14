@@ -17,6 +17,13 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
    @IBOutlet weak var passwordTextField: UITextField!
    @IBOutlet weak var passwordConfirmTextField: UITextField!
    
+   var emailIsValid = false
+   var emailConfirmIsValid = false
+   var phoneNumberIsValid = false
+   var passwordIsValid = false
+   var passwordConfirmIsValid = false
+   
+   
    override func viewDidLoad() {
       super.viewDidLoad()
       
@@ -43,10 +50,8 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
    
    func textFieldDidEndEditing(textField: UITextField) {
       
-      if isValidText(textField) {
-         //set something to true
-      } else {
-         //textfield animation
+      if !isValidText(textField) {
+         //invalid annimation
       }
       //check if all fields are true
    }
@@ -54,7 +59,6 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
    func stringIsOnlyNumbers(phoneNumber: String) -> Bool {
       let notNumbers = NSCharacterSet.decimalDigitCharacterSet().invertedSet
       if phoneNumber.rangeOfCharacterFromSet(notNumbers) == nil {
-         print("Characters only")
          return true
       }
       return false
@@ -66,33 +70,36 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
       switch textField {
       case emailTextField:
          if textEntered.containsString("@") && textEntered.containsString(".") {
+            emailIsValid = true
             return true
          }
          return false
       case emailConfirmationTextField:
          if textEntered == emailTextField.text {
+            emailConfirmIsValid = true
             return true
          }
          return false
       case phoneTextField:
          if textEntered.characters.count >= 7 && stringIsOnlyNumbers(textEntered) {
+            phoneNumberIsValid = true
             return true
          }
          return false
       case passwordTextField:
          if textEntered.characters.count >= 6 {
+            passwordIsValid = true
             return true
          }
          return false
       case passwordConfirmTextField:
          if textEntered == passwordTextField.text {
+            passwordConfirmIsValid = true
             return true
          }
          return false
       default:
          return false
       }
-      
    }
-   
 }
