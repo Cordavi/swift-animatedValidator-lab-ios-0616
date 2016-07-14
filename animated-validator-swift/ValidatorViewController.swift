@@ -72,6 +72,11 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
       passwordConfirmTextField.topAnchor.constraintEqualToAnchor(passwordTextField.topAnchor, constant: 46).active = true
       passwordConfirmTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
       
+      //submit button constraints
+      submitButton.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
+      submitButton.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.5).active = true
+      submitButton.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -56).active = true
+      
       
       emailTextField.delegate = self
       emailConfirmationTextField.delegate = self
