@@ -35,6 +35,44 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
       self.passwordTextField.accessibilityLabel = Constants.PASSWORDTEXTFIELD
       self.passwordConfirmTextField.accessibilityLabel = Constants.PASSWORDCONFIRMTEXTFIELD
       
+      //remove all IB constraints
+      view.removeConstraints(view.constraints)
+      view.translatesAutoresizingMaskIntoConstraints = false
+      submitButton.translatesAutoresizingMaskIntoConstraints = false
+      emailTextField.translatesAutoresizingMaskIntoConstraints = false
+      emailConfirmationTextField.translatesAutoresizingMaskIntoConstraints = false
+      phoneTextField.translatesAutoresizingMaskIntoConstraints = false
+      passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+      passwordConfirmTextField.translatesAutoresizingMaskIntoConstraints = false
+      
+      //set constraints
+      
+      //email field constraints
+      emailTextField.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
+      emailTextField.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 56).active = true
+      emailTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+
+      //email confirm  field constraints
+      emailConfirmationTextField.centerXAnchor.constraintEqualToAnchor(emailTextField.centerXAnchor).active = true
+      emailConfirmationTextField.topAnchor.constraintEqualToAnchor(emailTextField.topAnchor, constant: 46).active = true
+      emailConfirmationTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+      
+      //phone field constraints
+      phoneTextField.centerXAnchor.constraintEqualToAnchor(emailConfirmationTextField.centerXAnchor).active = true
+      phoneTextField.topAnchor.constraintEqualToAnchor(emailConfirmationTextField.topAnchor, constant: 46).active = true
+      phoneTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+      
+      //password field constraints
+      passwordTextField.centerXAnchor.constraintEqualToAnchor(phoneTextField.centerXAnchor).active = true
+      passwordTextField.topAnchor.constraintEqualToAnchor(phoneTextField.topAnchor, constant: 46).active = true
+      passwordTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+      
+      //password confirm field constraints
+      passwordConfirmTextField.centerXAnchor.constraintEqualToAnchor(passwordTextField.centerXAnchor).active = true
+      passwordConfirmTextField.topAnchor.constraintEqualToAnchor(passwordTextField.topAnchor, constant: 46).active = true
+      passwordConfirmTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+      
+      
       emailTextField.delegate = self
       emailConfirmationTextField.delegate = self
       phoneTextField.delegate = self
