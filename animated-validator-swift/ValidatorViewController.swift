@@ -22,6 +22,7 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
    var phoneNumberIsValid = false
    var passwordIsValid = false
    var passwordConfirmIsValid = false
+   var emailFieldWidth: NSLayoutConstraint?
    
    
    override func viewDidLoad() {
@@ -45,39 +46,40 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
       passwordTextField.translatesAutoresizingMaskIntoConstraints = false
       passwordConfirmTextField.translatesAutoresizingMaskIntoConstraints = false
       
-      //set constraints
+      //////////set constraints//////////////
       
       //email field constraints
       emailTextField.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
       emailTextField.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 56).active = true
-      emailTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
-
+      emailFieldWidth = emailTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, constant: -(view.frame.width * 0.25))
+      emailFieldWidth?.active = true
+      
       //email confirm  field constraints
       emailConfirmationTextField.centerXAnchor.constraintEqualToAnchor(emailTextField.centerXAnchor).active = true
       emailConfirmationTextField.topAnchor.constraintEqualToAnchor(emailTextField.topAnchor, constant: 46).active = true
-      emailConfirmationTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+      emailConfirmationTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, constant: -(view.frame.width * 0.25)).active = true
       
       //phone field constraints
       phoneTextField.centerXAnchor.constraintEqualToAnchor(emailConfirmationTextField.centerXAnchor).active = true
       phoneTextField.topAnchor.constraintEqualToAnchor(emailConfirmationTextField.topAnchor, constant: 46).active = true
-      phoneTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+      phoneTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, constant: -(view.frame.width * 0.25)).active = true
       
       //password field constraints
       passwordTextField.centerXAnchor.constraintEqualToAnchor(phoneTextField.centerXAnchor).active = true
       passwordTextField.topAnchor.constraintEqualToAnchor(phoneTextField.topAnchor, constant: 46).active = true
-      passwordTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+      passwordTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, constant: -(view.frame.width * 0.25)).active = true
       
       //password confirm field constraints
       passwordConfirmTextField.centerXAnchor.constraintEqualToAnchor(passwordTextField.centerXAnchor).active = true
       passwordConfirmTextField.topAnchor.constraintEqualToAnchor(passwordTextField.topAnchor, constant: 46).active = true
-      passwordConfirmTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.75).active = true
+      passwordConfirmTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, constant: -(view.frame.width * 0.25)).active = true
       
       //submit button constraints
       submitButton.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
       submitButton.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.5).active = true
       submitButton.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -56).active = true
       
-      
+      //assign delegates
       emailTextField.delegate = self
       emailConfirmationTextField.delegate = self
       phoneTextField.delegate = self
@@ -93,9 +95,7 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
    
    func textFieldDidEndEditing(textField: UITextField) {
       
-      if !isValidText(textField) {
-         //invalid annimation
-      }
+      isValidText(textField)
       //check if all fields are true
    }
    
@@ -107,42 +107,54 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
       return false
    }
    
-   func isValidText(textField: UITextField) -> Bool {
-      guard let textEntered = textField.text else { return false }
+   func animateField(textField: UITextField) {
+      emailTextField.resignFirstResponder()
+      UIView.animateWithDuration(0.5, delay: 0, options: [.Autoreverse], animations: {
+         textField.transform = CGAffineTransformMakeScale(1.1, 1.1)
+         //self.view.layoutIfNeeded()
+         }, completion: {_ in
+            textField.transform = CGAffineTransformMakeScale(1.0, 1.0)
+      })
+   }
+   
+   func isValidText(textField: UITextField) {
+      guard let textEntered = textField.text where !textEntered.isEmpty else {
+         return
+      }
       
       switch textField {
       case emailTextField:
          if textEntered.containsString("@") && textEntered.containsString(".") {
             emailIsValid = true
-            return true
+         } else {
+            animateField(textField)
          }
-         return false
       case emailConfirmationTextField:
          if textEntered == emailTextField.text {
             emailConfirmIsValid = true
-            return true
+         } else {
+            animateField(textField)
          }
-         return false
       case phoneTextField:
          if textEntered.characters.count >= 7 && stringIsOnlyNumbers(textEntered) {
             phoneNumberIsValid = true
-            return true
+         } else {
+            animateField(textField)
          }
-         return false
       case passwordTextField:
          if textEntered.characters.count >= 6 {
             passwordIsValid = true
-            return true
+         } else {
+            animateField(textField)
          }
-         return false
       case passwordConfirmTextField:
          if textEntered == passwordTextField.text {
             passwordConfirmIsValid = true
-            return true
+         } else {
+            animateField(textField)
          }
-         return false
       default:
-         return false
+         break
       }
    }
 }
