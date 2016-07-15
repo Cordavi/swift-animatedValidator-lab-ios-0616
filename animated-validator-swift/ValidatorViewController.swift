@@ -22,7 +22,7 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
    var phoneNumberIsValid = false
    var passwordIsValid = false
    var passwordConfirmIsValid = false
-   var emailFieldWidth: NSLayoutConstraint?
+   var submitButtonLocation: NSLayoutConstraint?
    
    
    override func viewDidLoad() {
@@ -51,8 +51,7 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
       //email field constraints
       emailTextField.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
       emailTextField.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 56).active = true
-      emailFieldWidth = emailTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, constant: -(view.frame.width * 0.25))
-      emailFieldWidth?.active = true
+      emailTextField.widthAnchor.constraintEqualToAnchor(view.widthAnchor, constant: -(view.frame.width * 0.25)).active = true
       
       //email confirm  field constraints
       emailConfirmationTextField.centerXAnchor.constraintEqualToAnchor(emailTextField.centerXAnchor).active = true
@@ -77,7 +76,8 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
       //submit button constraints
       submitButton.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
       submitButton.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: 0.5).active = true
-      submitButton.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -56).active = true
+      submitButtonLocation = submitButton.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -56)
+      submitButtonLocation?.active = true
       
       //assign delegates
       emailTextField.delegate = self
@@ -89,14 +89,24 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
       self.submitButton.enabled = false
    }
    
-   func checkTextField() {
-      
+   func animateSubmitButton() {
+      UIView.animateWithDuration(0.5) {
+         self.submitButtonLocation?.active = false
+         self.submitButton.topAnchor.constraintEqualToAnchor(self.passwordConfirmTextField.bottomAnchor, constant: 26).active = true
+         self.submitButton.enabled = true
+         self.view.layoutIfNeeded()
+      }
+   }
+   
+   func allFeildValid() {
+      if emailIsValid && emailConfirmIsValid && phoneNumberIsValid && passwordIsValid && passwordConfirmIsValid {
+         animateSubmitButton()
+      }
    }
    
    func textFieldDidEndEditing(textField: UITextField) {
-      
       isValidText(textField)
-      //check if all fields are true
+      allFeildValid()
    }
    
    func stringIsOnlyNumbers(phoneNumber: String) -> Bool {
@@ -108,12 +118,16 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
    }
    
    func animateField(textField: UITextField) {
-      emailTextField.resignFirstResponder()
-      UIView.animateWithDuration(0.5, delay: 0, options: [.Autoreverse], animations: {
-         textField.transform = CGAffineTransformMakeScale(1.1, 1.1)
-         //self.view.layoutIfNeeded()
+      UIView.animateWithDuration(0.4, delay: 0, options: [], animations: {
+         textField.transform = CGAffineTransformMakeScale(1.02, 1.02)
+         textField.backgroundColor = UIColor(red: 256, green: 0, blue: 0, alpha: 0.3)
+         self.view.layoutIfNeeded()
          }, completion: {_ in
-            textField.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            UIView.animateWithDuration(0.4, animations: {
+               textField.transform = CGAffineTransformMakeScale(1.0, 1.0)
+               textField.backgroundColor = UIColor.clearColor()
+               self.view.layoutIfNeeded()
+            })
       })
    }
    
